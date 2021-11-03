@@ -26,3 +26,17 @@ describe('hit function tests', () => {
     expect(result).toBe(0x8000000000000000000000000n);
   });
 });
+
+describe('isSunk function tests', () => {
+  let ship = Ship(0x40100400000n);
+
+  test('isSunk returns true when ship is completely hit', () => {
+    let result = ship.isSunk(0x40300400000n);
+    expect(result).toBe(true);
+  });
+
+  test('isSunk returns false when ship is not completely hit', () => {
+    let result = ship.isSunk(0x40200400000n);
+    expect(result).toBe(false);
+  });
+});

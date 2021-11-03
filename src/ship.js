@@ -1,8 +1,10 @@
 const Ship = positionBitBoard => {
-  let hitBitBoard = 0n;
+  let _hitBitBoard = 0n;
   const hit = attackBitBoard =>
-    hitBitBoard |= BigInt(positionBitBoard) & BigInt(attackBitBoard);
-  return { hit };
+    _hitBitBoard |= BigInt(positionBitBoard) & BigInt(attackBitBoard);
+  const isSunk = (hitBitBoard = _hitBitBoard) => 
+    (Boolean)((hitBitBoard & positionBitBoard) === positionBitBoard);
+  return { hit, isSunk };
 };
 
 module.exports = Ship;
