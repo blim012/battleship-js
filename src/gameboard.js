@@ -24,7 +24,10 @@ const Gameboard = (defaultShips = []) => {
   };
 
   const isAllSunk = () => {
-    
+    for(let i = 0; i < ships.length; i++) {
+      if(!ships[i].isSunk()) return false;
+    }
+    return true;
   };
 
   const getShipsPlacement = () => {
@@ -32,6 +35,7 @@ const Gameboard = (defaultShips = []) => {
     return ships.reduce((shipsPlacement, ship) => { 
       return shipsPlacement | ship.getPositionBitBoard() }, 0n);
   };
+
   return { getMissedBitBoard, placeShip, receiveAttack, isAllSunk };
 };
 

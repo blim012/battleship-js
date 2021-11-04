@@ -44,16 +44,20 @@ describe('receiveAttack function tests', () => {
   });
 });
 
-/*
 describe('isAllSunk function tests', () =>{
   test('returns true if all ships in gameboard have sunk', () => {
-    const gameboard = Gameboard([[Ship(0x1n), Ship(0x10n), Ship(0x100n)], []]);
-    let playerNum = 0;
-    let attackBitBoard = 0x1n;
-    gameboard.receiveAttack(playerNum, attackBitBoard);
-    gameboard.receiveAttack(playerNum, attackBitBoard << 1n);
-    gameboard.receiveAttack(playerNum, attackBitBoard << 2n);
-    expect(gameboard.isAllSunk(playerNum)).toBe(true);
+    const gameboard = Gameboard([Ship(0x1n), Ship(0x10n), Ship(0x100n)]);
+    gameboard.receiveAttack(0x1n);
+    gameboard.receiveAttack(0x10n);
+    gameboard.receiveAttack(0x100n);
+    expect(gameboard.isAllSunk()).toBe(true);
   });
+
+  test('returns false if not all ships in gameboard have sank', () => {
+    const gameboard = Gameboard([Ship(0x1n), Ship(0x10n), Ship(0x100n)]);
+    gameboard.receiveAttack(0x1n);
+    gameboard.receiveAttack(0x100n);
+    expect(gameboard.isAllSunk()).toBe(false);
+  })
 });
-*/
+
