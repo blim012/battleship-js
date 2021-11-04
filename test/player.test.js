@@ -1,6 +1,5 @@
 const Player = require('../src/player');
-const Gameboard = require('../src/gameboard');
-const Ship = require('../src/ship');
+
 
 describe('sendAttack function tests', () => {
   test('Opposing gameboard receives a receiveAttack call', () => {
@@ -12,3 +11,12 @@ describe('sendAttack function tests', () => {
     expect(receiveAttackMock.mock.calls[0][0]).toBe(attackBitBoard);
   });
 });
+
+describe('sendRandomAttack function tests', () => {
+  test('Opposing gameboard receives a receiveAttack call, with bitboard from Math.random', () => {
+    const player = Player({}, false);
+    const receiveAttackMock = jest.fn();
+    player.sendAttack(receiveAttackMock);
+    expect(receiveAttackMock.mock.calls.length).toBe(1);
+  });
+})
