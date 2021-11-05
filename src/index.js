@@ -1,9 +1,9 @@
-import Player from './player.js';
-import Gameboard from './gameboard.js';
-import Ship from './ship.js';
+import Player from './logic/player.js';
+import Gameboard from './logic/gameboard.js';
+import Ship from './logic/ship.js';
 
-import './reset.css';
-import './style.css';
+import './style/reset.css';
+import './style/style.css';
 
 window.Player = Player;
 window.Gameboard = Gameboard;
