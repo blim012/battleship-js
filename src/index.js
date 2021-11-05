@@ -5,6 +5,6 @@ import './style/reset.css';
 import './style/style.css';
 
 boardView.initBoards();
-boardView.initSubsciptions();
+boardView.initSubscriptions();
 
 Game.start();

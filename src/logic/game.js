@@ -1,5 +1,6 @@
 import Player from './player.js';
 import Gameboard from './gameboard.js';
+import Bitboard from './bitboard.js';
 import pubSub from './pubSub';
 
 const Game = (() => {
@@ -7,6 +8,7 @@ const Game = (() => {
   const computerBoard = Gameboard();
   const player = Player();
   const computer = Player(false);
+  let turn = 'player';
 
   const placeShips = () => {
     // For now, just hardcode placement
@@ -27,7 +29,28 @@ const Game = (() => {
     computerBoard.placeShip(0x80200n);
   };
 
+  const initSubscriptions = () => {
+    pubSub.subscribe('tile click', makeMove);
+  };
+
+  const makeMove = (moveData) => {
+    switch(turn) {
+      case 'ship':
+        console.log('ship placing phase tile click');
+        break;
+      case 'player':
+        if(moveData.boardType === 'enemy') {
+          let attackBitBoard = Bitboard.tileNumToBitBoard(moveData.tileNum);
+          console.log(player.sendAttack(computerBoard.receiveAttack, attackBitBoard));
+        }
+        break;
+      case 'enemy':
+        break;
+    }
+  };
+
   const start = () => {
+    initSubscriptions();
     placeShips();
   }
 

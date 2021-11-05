@@ -2,17 +2,33 @@ import pubSub from '../logic/pubSub';
 
 const boardView = (() => {
   const initBoards = () => {
-    let boardDivs = document.querySelectorAll('.board');
-    boardDivs.forEach((boardDiv) => {
-      for(let i = 0; i < 100; i++) {
-        let tileDiv = document.createElement('div');
-        tileDiv.classList.add('tile');
-        boardDiv.appendChild(tileDiv);
-      }
-    });
+    let playerBoard = document.querySelector('#player-container .board');
+    let enemyBoard = document.querySelector('#enemy-container .board');
+
+    for(let i = 0; i < 100; i++) {
+      let tileDiv = document.createElement('div');
+      tileDiv.classList.add('tile');
+      tileDiv.addEventListener('click', (e) => {
+        let element = e.currentTarget;
+        let tileNum = Array.from(element.parentNode.children).indexOf(element) + 1;
+        pubSub.publish('tile click', { tileNum, boardType: 'player' });
+      });
+      playerBoard.appendChild(tileDiv);      
+    }
+
+    for(let i = 0; i < 100; i++) {
+      let tileDiv = document.createElement('div');
+      tileDiv.classList.add('tile');
+      tileDiv.addEventListener('click', (e) => {
+        let element = e.currentTarget;
+        let tileNum = Array.from(element.parentNode.children).indexOf(element) + 1;
+        pubSub.publish('tile click', { tileNum, boardType: 'enemy' });
+      });
+      enemyBoard.appendChild(tileDiv);      
+    }
   };
 
-  const initSubsciptions = () => {
+  const initSubscriptions = () => {
     pubSub.subscribe('display ship', displayShip);
   };
 
@@ -26,7 +42,7 @@ const boardView = (() => {
     }
   };
 
-  return { initBoards, initSubsciptions };
+  return { initBoards, initSubscriptions };
 })();
 
 export default boardView;
