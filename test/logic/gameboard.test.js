@@ -23,14 +23,22 @@ describe('placeShip function tests', () => {
 });
 
 describe('receiveAttack function tests', () => {
-  test('Update hit bitboard on successful hit, returns updated hitBitBoard of ship', () => {
+  test('Returns the attack bitboard on hit if ship is not sunk', () => {
     const gameboard = Gameboard([Ship(0xFn)]); // Player 1 has one ship, at A1 -> D1
     let attackBitBoard = 0x1n; // Attack at A1
     expect(gameboard.receiveAttack(attackBitBoard)).toBe(0x1n);
     attackBitBoard = 0x2n;
-    expect(gameboard.receiveAttack(attackBitBoard)).toBe(0x3n);
+    expect(gameboard.receiveAttack(attackBitBoard)).toBe(0x2n);
     attackBitBoard = 0x8n;
-    expect(gameboard.receiveAttack(attackBitBoard)).toBe(0xBn);
+    expect(gameboard.receiveAttack(attackBitBoard)).toBe(0x8n);
+  });
+
+  test('Returns the position bitboard of ship if ship is sunk on hit', () => {
+    const gameboard = Gameboard([Ship(0x3n)]); // Player 1 has one ship, at A1 -> D1
+    let attackBitBoard = 0x1n; // Attack at A1
+    expect(gameboard.receiveAttack(attackBitBoard)).toBe(0x1n);
+    attackBitBoard = 0x2n;
+    expect(gameboard.receiveAttack(attackBitBoard)).toBe(0x3n);
   });
 
   test('Update missed shot bitboard on missed hit, returns 0n', () => {

@@ -16,8 +16,13 @@ const Gameboard = (defaultShips = []) => {
 
   const receiveAttack = (attackBitBoard) => {
     for(let i = 0; i < ships.length; i++) {
-      if(ships[i].getPositionBitBoard() & attackBitBoard)
-        return ships[i].hit(attackBitBoard);
+      let positionBitBoard = ships[i].getPositionBitBoard(); 
+      if(positionBitBoard & attackBitBoard) {
+        let hitBitBoard = ships[i].hit(attackBitBoard);
+        return (((hitBitBoard & positionBitBoard) === positionBitBoard)
+                ? hitBitBoard
+                : attackBitBoard);
+      }
     }
     missedBitBoard |= attackBitBoard;
     return 0n;
