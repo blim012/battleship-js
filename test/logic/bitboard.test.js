@@ -23,3 +23,10 @@ describe('getNumTrailingZeros function tests', () => {
     expect(Bitboard.getNumTrailingZeros(num)).toBe(0);
   });
 });
+
+describe('tileNumToBitBoard function tests', () => {
+  test('Returns a bitboard of a non-zero tile number', () => {
+    let tileNum = 88;
+    expect(Bitboard.tileNumToBitBoard(tileNum)).toBe(0x8000000000000000000000n);
+  });
+});
