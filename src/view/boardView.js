@@ -1,3 +1,5 @@
+import pubSub from '../logic/pubSub';
+
 const boardView = (() => {
   const initBoards = () => {
     let boardDivs = document.querySelectorAll('.board');
@@ -10,7 +12,21 @@ const boardView = (() => {
     });
   };
 
-  return { initBoards };
+  const initSubsciptions = () => {
+    pubSub.subscribe('display ship', displayShip);
+  };
+
+  const displayShip = (shipData) => {
+    let tileOffset = shipData.vertical ? 10 : 1;
+    let boardDiv = document.querySelector(`#player-container .board`);
+    for(let i = 0; i < shipData.length; i++) {
+      let shipTile = shipData.tileNum + (tileOffset * i);
+      let tile = boardDiv.querySelector(`div:nth-child(${shipTile})`);
+      tile.classList.add('ship-tile');
+    }
+  };
+
+  return { initBoards, initSubsciptions };
 })();
 
-module.exports = boardView;
+export default boardView;
