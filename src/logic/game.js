@@ -5,8 +5,8 @@ import pubSub from './pubSub';
 const Game = (() => {
   const playerBoard = Gameboard();
   const computerBoard = Gameboard();
-  const player = Player(playerBoard);
-  const computer = Player(computerBoard, false);
+  const player = Player();
+  const computer = Player(false);
 
   const placeShips = () => {
     // For now, just hardcode placement

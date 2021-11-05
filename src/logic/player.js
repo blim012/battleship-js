@@ -1,4 +1,4 @@
-const Player = (gameboard, human = true) => {
+const Player = (human = true) => {
   const sendAttack = (receiveAttackCB, attackBitBoard = 0n) =>
     human 
       ? receiveAttackCB(attackBitBoard)
