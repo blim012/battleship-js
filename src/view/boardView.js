@@ -10,6 +10,9 @@ const boardView = (() => {
       tileDiv.classList.add('tile');
       tileDiv.addEventListener('click', (e) => {
         let element = e.currentTarget;
+        if(element.classList.contains('miss') ||
+           element.classList.contains('hit') ||
+           element.classList.contains('sink')) return;
         let tileNum = Array.from(element.parentNode.children).indexOf(element) + 1;
         pubSub.publish('tile click', { tileNum, boardType: 'player' });
       });
@@ -21,6 +24,9 @@ const boardView = (() => {
       tileDiv.classList.add('tile');
       tileDiv.addEventListener('click', (e) => {
         let element = e.currentTarget;
+        if(element.classList.contains('miss') ||
+           element.classList.contains('hit') ||
+           element.classList.contains('sink')) return;
         let tileNum = Array.from(element.parentNode.children).indexOf(element) + 1;
         pubSub.publish('tile click', { tileNum, boardType: 'enemy' });
       });
