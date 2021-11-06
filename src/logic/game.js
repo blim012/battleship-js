@@ -8,7 +8,7 @@ const Game = (() => {
   const computerBoard = Gameboard();
   const player = Player();
   const computer = Player(false);
-  let turn = 'player';
+  let state = 'play';
 
   const placeShips = () => {
     // For now, just hardcode placement
@@ -34,15 +34,22 @@ const Game = (() => {
   };
 
   const makeMove = (moveData) => {
-    switch(turn) {
+    switch(state) {
       case 'ship':
         console.log('ship placing phase tile click');
         break;
 
-      case 'player':
+      case 'play':
         if(moveData.boardType === 'enemy') {
-          if(playerMove(moveData)) computerMove();
+          if(playerMove(moveData)) {
+            if(computerBoard.isAllSunk()) return gameover('player');
+            computerMove();
+            if(playerBoard.isAllSunk()) return gameover('computer');
+          }
         }
+        break;
+
+      case 'gameover':
         break;
     }
   };
@@ -95,6 +102,12 @@ const Game = (() => {
       console.log('missed the player');
     }
   };
+
+  const gameover = (winner) => {
+    console.log(winner);
+    state = 'gameover';
+    pubSub.publish('gameover', winner);
+  }
 
   const start = () => {
     initSubscriptions();
