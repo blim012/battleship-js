@@ -1,12 +1,13 @@
 const Ship = positionBitBoard => {
-  let _hitBitBoard = 0n;
+  let hitBitBoard = 0n;
   
   const getPositionBitBoard = () => positionBitBoard;
+  const getHitBitBoard = () => hitBitBoard; 
   const hit = attackBitBoard =>
-    _hitBitBoard |= BigInt(positionBitBoard) & BigInt(attackBitBoard);
-  const isSunk = (hitBitBoard = _hitBitBoard) => 
-    (Boolean)((hitBitBoard & positionBitBoard) === positionBitBoard);
-  return { getPositionBitBoard, hit, isSunk };
+    hitBitBoard |= BigInt(positionBitBoard) & BigInt(attackBitBoard);
+  const isSunk = (bitboard = hitBitBoard) => 
+    (Boolean)((bitboard & positionBitBoard) === positionBitBoard);
+  return { getPositionBitBoard, getHitBitBoard, hit, isSunk };
 };
 
 module.exports = Ship;

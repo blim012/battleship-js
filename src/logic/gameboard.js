@@ -15,12 +15,14 @@ const Gameboard = (defaultShips = []) => {
   };
 
   const receiveAttack = (attackBitBoard) => {
+    if(missedBitBoard & attackBitBoard) return -1;
     for(let i = 0; i < ships.length; i++) {
-      let positionBitBoard = ships[i].getPositionBitBoard(); 
+      if(ships[i].getHitBitBoard() & attackBitBoard) return -1;
+      let positionBitBoard = ships[i].getPositionBitBoard();
       if(positionBitBoard & attackBitBoard) {
-        let hitBitBoard = ships[i].hit(attackBitBoard);
-        return (((hitBitBoard & positionBitBoard) === positionBitBoard)
-                ? hitBitBoard
+        let resultBitBoard = ships[i].hit(attackBitBoard);
+        return (((resultBitBoard & positionBitBoard) === positionBitBoard)
+                ? positionBitBoard
                 : attackBitBoard);
       }
     }

@@ -41,25 +41,58 @@ const Game = (() => {
 
       case 'player':
         if(moveData.boardType === 'enemy') {
-          let attackBitBoard = Bitboard.tileNumToBitBoard(moveData.tileNum);
-          let attackResult = player.sendAttack(computerBoard.receiveAttack, attackBitBoard);
-          if(attackResult) { // Hit
-            if(attackResult === attackBitBoard) {
-              pubSub.publish('attack hit', moveData); 
-              console.log('Hit'); 
-            }
-            else {
-              let shipTileNums = Bitboard.bitboardToTileNum(attackResult);
-              moveData.shipTileNums = shipTileNums;
-              pubSub.publish('attack sink', moveData);
-              console.log('Sunk');
-            }
-          } else {
-            pubSub.publish('attack miss', moveData);
-            console.log('miss');
-          }
+          if(playerMove(moveData)) computerMove();
         }
         break;
+    }
+  };
+
+  const playerMove = (moveData) => {
+    let attackBitBoard = Bitboard.tileNumToBitBoard(moveData.tileNum);
+    let attackResult = player.sendAttack(computerBoard.receiveAttack, attackBitBoard);
+    if(attackResult < 0) return false;
+    if(attackResult) { // Hit
+      if(attackResult === attackBitBoard) {
+        pubSub.publish('attack hit', moveData); 
+        console.log('Hit the comp'); 
+      }
+      else {
+        let shipTileNums = Bitboard.bitboardToTileNum(attackResult);
+        moveData.shipTileNums = shipTileNums;
+        pubSub.publish('attack sink', moveData);
+        console.log('Sunk the comp');
+      }
+    } else {
+      pubSub.publish('attack miss', moveData);
+      console.log('missed the comp');
+    }
+
+    return true;
+  };
+
+  const computerMove = () => {
+    let attackData = computer.sendAttack(playerBoard.receiveAttack);
+    while(attackData.attackResult < 0) {
+      attackData = computer.sendAttack(playerBoard.receiveAttack);
+    }
+    let attackResult = attackData.attackResult;
+    let attackBitBoard = attackData.attackBitBoard;
+    let moveData = { tileNum: attackData.tileNum, boardType: 'player' };
+
+    if(attackResult) { // Hit
+      if(attackResult === attackBitBoard) {
+        pubSub.publish('attack hit', moveData); 
+        console.log('Hit the player');
+      }
+      else {
+        let shipTileNums = Bitboard.bitboardToTileNum(attackResult);
+        moveData.shipTileNums = shipTileNums;
+        pubSub.publish('attack sink', moveData);
+        console.log('Sunk the player');
+      }
+    } else {
+      pubSub.publish('attack miss', moveData);
+      console.log('missed the player');
     }
   };
 
