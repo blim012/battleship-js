@@ -19,7 +19,6 @@ const Game = (() => {
   }
 
   const placeShip = (shipData) => {
-    // Make computer place ships in the same spots as player for now
     if(state === 'ship placement') {
       let shipLength = playerBoard.getLengthOfNextShip();
       shipData.tileNums.splice(shipLength);
@@ -29,7 +28,6 @@ const Game = (() => {
         let placeResult = playerBoard.placeShip(placeBitBoard);
         if((placeResult & placeBitBoard) === placeBitBoard) {
           pubSub.publish('display ship', shipData.tileNums);
-          computerBoard.placeShip(placeBitBoard); // REMOVE LATER!!!!!
           if(playerBoard.getNumShips() === 5) { // All player ships are placed
             placeComputerShips();
             // pubSub some function to display enemy board / hide rotate toggle
@@ -41,8 +39,28 @@ const Game = (() => {
   }
 
   const placeComputerShips = () => {
-
+    if(state === 'ship placement') {
+      while(computerBoard.getNumShips() < 5) {
+        let shipTileNums = [];
+        let shipLength = computerBoard.getLengthOfNextShip();
+        let vertical = Math.floor(Math.random() * 2);
+        let tileOffset = vertical ? 10 : 1;
+        let randTileNum = getRandTileNum(shipLength, vertical);
+        for(let i = 0; i < shipLength; i++) 
+          shipTileNums.push(randTileNum + (tileOffset * i));
+        let placeBitBoard = shipTileNums.reduce((prev, curr) => {
+          return prev | Bitboard.tileNumToBitBoard(curr) }, 0n);
+        computerBoard.placeShip(placeBitBoard);
+      }
+    }
   };
+
+  const getRandTileNum  = (shipLength, vertical) => {
+    if(vertical) return Math.floor(Math.random() * (110 - (shipLength * 10))) + 1;
+    let randTileNumOnes = Math.floor(Math.random() * (10 - (shipLength - 1))) + 1;
+    let randTileNumTens = Math.floor(Math.random() * 10) * 10;
+    return randTileNumOnes + randTileNumTens;
+  }
 
   const makeMove = (moveData) => {
     if(state === 'play') {
