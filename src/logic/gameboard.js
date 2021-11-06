@@ -4,7 +4,10 @@ const Gameboard = (defaultShips = []) => {
   let ships = defaultShips;
   let missedBitBoard = 0n;
 
-  const getNumShips = () => ships.length;
+  const getLengthOfNextShip = () => {
+    let shipLengths = [5, 4, 3, 3, 2];
+    return shipLengths[ships.length];
+  };
 
   const getMissedBitBoard = () => missedBitBoard;
 
@@ -45,7 +48,7 @@ const Gameboard = (defaultShips = []) => {
       return shipsPlacement | ship.getPositionBitBoard() }, 0n);
   };
 
-  return { getNumShips, getMissedBitBoard, placeShip, receiveAttack, isAllSunk };
+  return { getLengthOfNextShip, getMissedBitBoard, placeShip, receiveAttack, isAllSunk };
 };
 
 module.exports = Gameboard;

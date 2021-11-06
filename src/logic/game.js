@@ -12,15 +12,29 @@ const Game = (() => {
 
   const shipPlacementStatus = (tileEvent) => {
     if(state === 'ship placement') {
-      let status = playerBoard.getNumShips();
+      let status = playerBoard.getLengthOfNextShip();
       tileEvent.status = status;
       pubSub.publish('ship status', tileEvent);
     }
   }
 
+  const placeShip = (shipData) => {
+    if(state === 'ship placement') {
+      let shipLength = playerBoard.getLengthOfNextShip();
+      shipData.tileNums.splice(shipLength);
+      if(shipData.tileNums.length === shipLength) {
+        let placeBitBoard = shipData.tileNums.reduce((prev, curr) => {
+          return prev | Bitboard.tileNumToBitBoard(curr) }, 0n);
+        let placeResult = playerBoard.placeShip(placeBitBoard);
+        if((placeResult & placeBitBoard) === placeBitBoard) {
+          pubSub.publish('display ship', shipData.tileNums);
+        }
+      }
+    }
+  }
+
   const placeShips = () => {
     // For now, just hardcode placement
-    
     playerBoard.placeShip(0xF800000000000000000000000n);
     pubSub.publish('display ship', { vertical: false, length: 5, tileNum: 96 });
     playerBoard.placeShip(0x10040100400000000000000n);
@@ -36,13 +50,15 @@ const Game = (() => {
     computerBoard.placeShip(0x40100400000000n);
     computerBoard.placeShip(0x40100400000n);
     computerBoard.placeShip(0x80200n);
-    
   };
 
   const makeMove = (moveData) => {
     switch(state) {
       case 'ship placement':
-        console.log('ship placing phase tile click');
+        if(moveData.boardType === 'player') {
+          console.log('ship placement click');
+
+        }
         break;
 
       case 'play':
@@ -116,13 +132,14 @@ const Game = (() => {
   }
 
   const initSubscriptions = () => {
-    pubSub.subscribe('tile click', makeMove);
+    pubSub.subscribe('player tile click', placeShip);
+    pubSub.subscribe('enemy tile click', makeMove);
     pubSub.subscribe('ship preview', shipPlacementStatus);
   };
 
   const start = () => {
     initSubscriptions();
-    placeShips();
+    //placeShips();
   }
 
   return { start };
