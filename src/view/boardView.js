@@ -9,24 +9,9 @@ const boardView = (() => {
     for(let i = 0; i < 100; i++) {
       let tileDiv = document.createElement('div');
       tileDiv.classList.add('tile');
-      tileDiv.addEventListener('click', (e) => {
-        let element = e.currentTarget;
-        if(element.classList.contains('miss') ||
-           element.classList.contains('hit') ||
-           element.classList.contains('sink')) return;
-        let tileNum = getTileNum(element);
-        pubSub.publish('tile click', { tileNum, boardType: 'player' });
-      });
-      tileDiv.addEventListener('mouseenter', (e) => {
-        let type = e.type;
-        let element = e.currentTarget;
-        pubSub.publish('ship preview', { type, element });
-      });
-      tileDiv.addEventListener('mouseleave', (e) => {
-        let type = e.type;
-        let element = e.currentTarget;
-        pubSub.publish('ship preview', { type, element });
-      });
+      tileDiv.addEventListener('click', tileClickCB('player'));
+      tileDiv.addEventListener('mouseenter', shipPreviewCB);
+      tileDiv.addEventListener('mouseleave', shipPreviewCB);
       playerBoard.appendChild(tileDiv);      
     }
 
@@ -34,14 +19,7 @@ const boardView = (() => {
     for(let i = 0; i < 100; i++) {
       let tileDiv = document.createElement('div');
       tileDiv.classList.add('tile');
-      tileDiv.addEventListener('click', (e) => {
-        let element = e.currentTarget;
-        if(element.classList.contains('miss') ||
-           element.classList.contains('hit') ||
-           element.classList.contains('sink')) return;
-        let tileNum = getTileNum(element);
-        pubSub.publish('tile click', { tileNum, boardType: 'enemy' });
-      });
+      tileDiv.addEventListener('click', tileClickCB('enemy'));
       enemyBoard.appendChild(tileDiv);      
     }
   };
@@ -116,6 +94,23 @@ const boardView = (() => {
     pubSub.subscribe('attack hit', displayHit);
     pubSub.subscribe('attack sink', displaySink);
   };
+
+  function tileClickCB (boardType) {
+    return function (e) {
+      let element = e.currentTarget;
+        if(element.classList.contains('miss') ||
+           element.classList.contains('hit') ||
+           element.classList.contains('sink')) return;
+        let tileNum = getTileNum(element);
+      pubSub.publish('tile click', { tileNum, boardType });
+    }
+  }
+
+  function shipPreviewCB (e) {
+    let type = e.type;
+    let element = e.currentTarget;
+    pubSub.publish('ship preview', { type, element });
+  }
 
   return { initBoards, initSubscriptions };
 })();
