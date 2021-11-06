@@ -33,46 +33,13 @@ const Game = (() => {
     }
   }
 
-  const placeShips = () => {
-    // For now, just hardcode placement
-    playerBoard.placeShip(0xF800000000000000000000000n);
-    pubSub.publish('display ship', { vertical: false, length: 5, tileNum: 96 });
-    playerBoard.placeShip(0x10040100400000000000000n);
-    pubSub.publish('display ship', { vertical: true, length: 4, tileNum: 59 });
-    playerBoard.placeShip(0x40100400000000n);
-    pubSub.publish('display ship', { vertical: true, length: 3, tileNum: 35 });
-    playerBoard.placeShip(0x40100400000n);
-    pubSub.publish('display ship', { vertical: true, length: 3, tileNum: 23 });
-    playerBoard.placeShip(0x80200n);
-    pubSub.publish('display ship', { vertical: true, length: 2, tileNum: 10 });
-    computerBoard.placeShip(0xF800000000000000000000000n);
-    computerBoard.placeShip(0x10040100400000000000000n);
-    computerBoard.placeShip(0x40100400000000n);
-    computerBoard.placeShip(0x40100400000n);
-    computerBoard.placeShip(0x80200n);
-  };
-
   const makeMove = (moveData) => {
-    switch(state) {
-      case 'ship placement':
-        if(moveData.boardType === 'player') {
-          console.log('ship placement click');
-
-        }
-        break;
-
-      case 'play':
-        if(moveData.boardType === 'enemy') {
-          if(playerMove(moveData)) {
-            if(computerBoard.isAllSunk()) return gameover('player');
-            computerMove();
-            if(playerBoard.isAllSunk()) return gameover('computer');
-          }
-        }
-        break;
-
-      case 'gameover':
-        break;
+    if(state === 'play') {
+      if(playerMove(moveData)) {
+        if(computerBoard.isAllSunk()) return gameover('player');
+        computerMove();
+        if(playerBoard.isAllSunk()) return gameover('computer');
+      }
     }
   };
 
@@ -139,7 +106,6 @@ const Game = (() => {
 
   const start = () => {
     initSubscriptions();
-    //placeShips();
   }
 
   return { start };
