@@ -30,6 +30,9 @@ const boardView = (() => {
 
   const initSubscriptions = () => {
     pubSub.subscribe('display ship', displayShip);
+    pubSub.subscribe('attack miss', displayMiss);
+    pubSub.subscribe('attack hit', displayHit);
+    pubSub.subscribe('attack sink', displaySink);
   };
 
   const displayShip = (shipData) => {
@@ -37,10 +40,31 @@ const boardView = (() => {
     let boardDiv = document.querySelector(`#player-container .board`);
     for(let i = 0; i < shipData.length; i++) {
       let shipTile = shipData.tileNum + (tileOffset * i);
-      let tile = boardDiv.querySelector(`div:nth-child(${shipTile})`);
-      tile.classList.add('ship-tile');
+      let tileDiv = boardDiv.querySelector(`.tile:nth-child(${shipTile})`);
+      tileDiv.classList.add('ship-tile');
     }
   };
+
+  const displayMiss = (moveData) => {
+    let boardDiv = document.querySelector(`#${moveData.boardType}-container .board`);
+    let tileDiv = boardDiv.querySelector(`.tile:nth-child(${moveData.tileNum})`);
+    tileDiv.classList.add('miss');
+  };
+
+  const displayHit = (moveData) => {
+    let boardDiv = document.querySelector(`#${moveData.boardType}-container .board`);
+    let tileDiv = boardDiv.querySelector(`.tile:nth-child(${moveData.tileNum})`);
+    tileDiv.classList.add('hit');
+  };
+
+  const displaySink = (moveData) => {
+    let shipTileNums = moveData.shipTileNums;
+    let boardDiv = document.querySelector(`#${moveData.boardType}-container .board`);
+    for(let i = 0; i < shipTileNums.length; i++) {
+      let tileDiv = boardDiv.querySelector(`.tile:nth-child(${shipTileNums[i]})`);
+      tileDiv.classList.add('sink');
+    }
+  }
 
   return { initBoards, initSubscriptions };
 })();

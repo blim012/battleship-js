@@ -28,3 +28,15 @@ body {
 .ship-tile {
   background-color: green;
 }
+
+.miss {
+  background-color: blue;
+}
+
+.hit {
+  background-color: red;
+}
+
+.sink {
+  background-color: yellow;
+}

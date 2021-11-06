@@ -38,13 +38,27 @@ const Game = (() => {
       case 'ship':
         console.log('ship placing phase tile click');
         break;
+
       case 'player':
         if(moveData.boardType === 'enemy') {
           let attackBitBoard = Bitboard.tileNumToBitBoard(moveData.tileNum);
-          console.log(player.sendAttack(computerBoard.receiveAttack, attackBitBoard));
+          let attackResult = player.sendAttack(computerBoard.receiveAttack, attackBitBoard);
+          if(attackResult) { // Hit
+            if(attackResult === attackBitBoard) {
+              pubSub.publish('attack hit', moveData); 
+              console.log('Hit'); 
+            }
+            else {
+              let shipTileNums = Bitboard.bitboardToTileNum(attackResult);
+              moveData.shipTileNums = shipTileNums;
+              pubSub.publish('attack sink', moveData);
+              console.log('Sunk');
+            }
+          } else {
+            pubSub.publish('attack miss', moveData);
+            console.log('miss');
+          }
         }
-        break;
-      case 'enemy':
         break;
     }
   };
