@@ -19,6 +19,7 @@ const Game = (() => {
   }
 
   const placeShip = (shipData) => {
+    // Make computer place ships in the same spots as player for now
     if(state === 'ship placement') {
       let shipLength = playerBoard.getLengthOfNextShip();
       shipData.tileNums.splice(shipLength);
@@ -28,10 +29,20 @@ const Game = (() => {
         let placeResult = playerBoard.placeShip(placeBitBoard);
         if((placeResult & placeBitBoard) === placeBitBoard) {
           pubSub.publish('display ship', shipData.tileNums);
+          computerBoard.placeShip(placeBitBoard); // REMOVE LATER!!!!!
+          if(playerBoard.getNumShips() === 5) { // All player ships are placed
+            placeComputerShips();
+            // pubSub some function to display enemy board / hide rotate toggle
+            state = 'play';
+          }
         }
       }
     }
   }
+
+  const placeComputerShips = () => {
+
+  };
 
   const makeMove = (moveData) => {
     if(state === 'play') {
