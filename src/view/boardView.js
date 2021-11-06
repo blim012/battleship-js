@@ -36,17 +36,21 @@ const boardView = (() => {
   const getTileNum = (tileDiv) => 
     Array.from(tileDiv.parentNode.children).indexOf(tileDiv) + 1;
 
-  const getShipPreviewTileDivs = (tileDiv, status = 5) => {
+  const getShipPreviewTileDivs = (tileDiv, shipLength = 5) => {
     let boardDiv = document.querySelector(`#player-container .board`);
     let shipPreviewTileDivs = [];
     let tileNum = getTileNum(tileDiv);
-    let tileOffset = getTileOffset(true);
-    let shipLength = status;
+    let startingRow = parseInt((tileNum - 1) / 10) + 1;
+    let vertical = isVertical();
+    let tileOffset = getTileOffset(vertical);
     if(shipLength) {
       for(let i = 0; i < shipLength; i++) {
-        let shipTile = tileNum + (tileOffset * i);  
-        let tileDiv = boardDiv.querySelector(`.tile:nth-child(${shipTile})`);
-        if(!tileDiv) return shipPreviewTileDivs;
+        let shipTileNum = tileNum + (tileOffset * i);  
+        let tileDiv = boardDiv.querySelector(`.tile:nth-child(${shipTileNum})`);
+        if(!vertical && (startingRow != parseInt((shipTileNum - 1) / 10) + 1))
+          return shipPreviewTileDivs;
+        if(!tileDiv) 
+          return shipPreviewTileDivs;
         shipPreviewTileDivs.push(tileDiv);
       }
     }
@@ -92,7 +96,12 @@ const boardView = (() => {
       let tileDiv = boardDiv.querySelector(`.tile:nth-child(${shipTileNums[i]})`);
       tileDiv.classList.add('sink');
     }
-  }
+  };
+
+  const isVertical = () => {
+    let rotateCheckbox = document.querySelector('#rotate');
+    return rotateCheckbox.checked ? false : true;
+  };
 
   const initSubscriptions = () => {
     pubSub.subscribe('ship status', toggleShipPreview);
@@ -109,10 +118,10 @@ const boardView = (() => {
           element.classList.contains('hit') ||
           element.classList.contains('sink')) return;
       if(boardType === 'player') {
-        // Get orientation here
+        let vertical = isVertical();
         let shipTileDivs = getShipPreviewTileDivs(element);
         let tileNums = shipTileDivs.map((tileDiv) => getTileNum(tileDiv));
-        pubSub.publish('player tile click', { tileNums, boardType, vertical: true });
+        pubSub.publish('player tile click', { tileNums, boardType, vertical });
       } else { // computer
         let tileNum = getTileNum(element);
         pubSub.publish('enemy tile click', { tileNum, boardType });
