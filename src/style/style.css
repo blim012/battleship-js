@@ -29,6 +29,10 @@ body {
   opacity: 0.6;
 }
 
+.preview {
+  opacity: 0.6;
+}
+
 .ship-tile {
   background-color: green;
 }

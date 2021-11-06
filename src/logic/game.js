@@ -8,10 +8,19 @@ const Game = (() => {
   const computerBoard = Gameboard();
   const player = Player();
   const computer = Player(false);
-  let state = 'play';
+  let state = 'ship placement';
+
+  const shipPlacementStatus = (tileEvent) => {
+    if(state === 'ship placement') {
+      let status = playerBoard.getNumShips();
+      tileEvent.status = status;
+      pubSub.publish('ship status', tileEvent);
+    }
+  }
 
   const placeShips = () => {
     // For now, just hardcode placement
+    
     playerBoard.placeShip(0xF800000000000000000000000n);
     pubSub.publish('display ship', { vertical: false, length: 5, tileNum: 96 });
     playerBoard.placeShip(0x10040100400000000000000n);
@@ -27,15 +36,12 @@ const Game = (() => {
     computerBoard.placeShip(0x40100400000000n);
     computerBoard.placeShip(0x40100400000n);
     computerBoard.placeShip(0x80200n);
-  };
-
-  const initSubscriptions = () => {
-    pubSub.subscribe('tile click', makeMove);
+    
   };
 
   const makeMove = (moveData) => {
     switch(state) {
-      case 'ship':
+      case 'ship placement':
         console.log('ship placing phase tile click');
         break;
 
@@ -108,6 +114,11 @@ const Game = (() => {
     state = 'gameover';
     pubSub.publish('gameover', winner);
   }
+
+  const initSubscriptions = () => {
+    pubSub.subscribe('tile click', makeMove);
+    pubSub.subscribe('ship preview', shipPlacementStatus);
+  };
 
   const start = () => {
     initSubscriptions();
