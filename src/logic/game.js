@@ -28,7 +28,7 @@ const Game = (() => {
           pubSub.publish('ships placed');
           pubSub.publish('display message', { 
             boardType: 'player', 
-            text: 'Sink the enemy ship before they sink yours!' 
+            text: 'Sink the enemy ships before they sink yours!' 
           });
           pubSub.publish('display message', {
             boardType: 'enemy',
