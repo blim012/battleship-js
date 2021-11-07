@@ -60,19 +60,23 @@ tile:nth-child(n + 91) {
 }
 
 .ship-tile {
-  background-color: green;
+  background-image: url('../assets/ship.png');
+  background-size: cover;
 }
 
 .miss {
-  background-color: blue;
+  background-image: url('../assets/wave.png');
+  background-size: cover;
 }
 
 .hit {
-  background-color: red;
+  background-image: url('../assets/x.png');
+  background-size: cover;
 }
 
 .sink {
-  background-color: yellow;
+  background-image: url('../assets/skull.png');
+  background-size: cover;
 }
 
 #rotate {
