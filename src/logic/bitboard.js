@@ -16,4 +16,4 @@ const Bitboard = (() => {
   return { getLSB, getNumTrailingZeros, tileNumToBitBoard, bitboardToTileNum };
 })();
 
-export default Bitboard;
+module.exports = Bitboard;
