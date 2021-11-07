@@ -19,7 +19,7 @@ body {
 .board-header {
   position: absolute;
   width: max-content;
-  top: -7em;
+  top: -7.5em;
   left: 50%;
   transform: translate(-50%, 0);
 }
@@ -29,10 +29,19 @@ body {
   font-weight: 500;
 }
 
+.board-message-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5em 2em;
+  background-color: black;
+  border-radius: 2em;
+  margin-top: 1em;
+}
+
 .board-message {
   font-size: 1.5em;
   font-weight: 300;
-  margin-top: 0.5em;
 }
 
 .board-container {
