@@ -59,7 +59,7 @@ body {
   border-right: none;
 }
 
-tile:nth-child(n + 91) {
+.tile:nth-child(n + 91) {
   border-bottom: none;
 }
 
@@ -111,6 +111,19 @@ tile:nth-child(n + 91) {
   bottom: -3em;
   left: 50%;
   transform: translate(-50%, 0);
+  border: 3px solid black;
+  border-radius: 6px;
+  font-size: 1.5em;
+  color: #ddd;
+  background-color: black;
+}
+
+#reset:hover {
+  border-color: #394652;
+}
+
+#reset:active {
+  background-color: #394652;
 }
 
 .no-display {
