@@ -26,6 +26,14 @@ const Game = (() => {
         if(playerBoard.getNumShips() === 5) { // All player ships are placed
           placeComputerShips();
           pubSub.publish('ships placed');
+          pubSub.publish('display message', { 
+            boardType: 'player', 
+            text: 'Sink the enemy ship before they sink yours!' 
+          });
+          pubSub.publish('display message', {
+            boardType: 'enemy',
+            text: 'Click this board to fire at the enemy!'
+          });
           state = 'play';
         }
       }
@@ -41,7 +49,7 @@ const Game = (() => {
       if(playerMove(moveData)) {
         if(computerBoard.isAllSunk()) return gameover('player');
         computerMove();
-        if(playerBoard.isAllSunk()) return gameover('computer');
+        if(playerBoard.isAllSunk()) return gameover('enemy');
       }
     }
   };
@@ -52,18 +60,27 @@ const Game = (() => {
     if(attackResult < 0) return false;
     if(attackResult) { // Hit
       if(attackResult === attackBitBoard) {
-        pubSub.publish('attack hit', moveData); 
-        console.log('Hit the comp'); 
+        pubSub.publish('attack hit', moveData);
+        pubSub.publish('display message', {
+          boardType: 'player',
+          text: 'You hit an enemy ship!'
+        }); 
       }
       else {
         let shipTileNums = Bitboard.bitboardToTileNum(attackResult);
         moveData.shipTileNums = shipTileNums;
         pubSub.publish('attack sink', moveData);
-        console.log('Sunk the comp');
+        pubSub.publish('display message', {
+          boardType: 'player',
+          text: 'You sunk an enemy ship!'
+        });
       }
     } else {
       pubSub.publish('attack miss', moveData);
-      console.log('missed the comp');
+      pubSub.publish('display message', {
+        boardType: 'player',
+        text: 'You fired and missed!'
+      });
     }
 
     return true;
@@ -80,31 +97,51 @@ const Game = (() => {
 
     if(attackResult) { // Hit
       if(attackResult === attackBitBoard) {
-        pubSub.publish('attack hit', moveData); 
-        console.log('Hit the player');
+        pubSub.publish('attack hit', moveData);
+        pubSub.publish('display message', {
+          boardType: 'enemy',
+          text: 'Enemy hit your ship!'
+        });
       }
       else {
         let shipTileNums = Bitboard.bitboardToTileNum(attackResult);
         moveData.shipTileNums = shipTileNums;
         pubSub.publish('attack sink', moveData);
-        console.log('Sunk the player');
+        pubSub.publish('display message', {
+          boardType: 'enemy',
+          text: 'Enemy sunk your ship!'
+        });
       }
     } else {
       pubSub.publish('attack miss', moveData);
-      console.log('missed the player');
+      pubSub.publish('display message', {
+        boardType: 'enemy',
+        text: 'Enemy fired and missed!'
+      });
     }
   };
 
   const gameover = (winner) => {
-    console.log(winner);
+    let loser = winner === 'player' ? 'enemy' : 'player';
+    pubSub.publish('display message', {
+      boardType: winner,
+      text: 'Winner!'
+    });
+    pubSub.publish('display message', {
+      boardType: loser,
+      text: 'Loser!'
+    });
     state = 'gameover';
-    pubSub.publish('gameover', winner);
   };
 
   const resetGame = () => {
     playerBoard = Gameboard();
     computerBoard = Gameboard();
     state = 'ship placement';
+    pubSub.publish('display message', {
+      boardType: 'player',
+      text: 'Place your ships!'
+    });
   };
 
   const initSubscriptions = () => {

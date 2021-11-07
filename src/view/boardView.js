@@ -84,6 +84,11 @@ const boardView = (() => {
     }
   };
 
+  const displayMessage = (messageData) => {
+    let messageElement = document.querySelector(`#${messageData.boardType}-container .board-message`);
+    messageElement.textContent = messageData.text;
+  };
+
   const displayEnemy = () => {
     let enemyContainer = document.querySelector('#enemy-container');
     let rotateContainer = document.querySelector('#rotate-container');
@@ -124,6 +129,7 @@ const boardView = (() => {
   };
 
   const initSubscriptions = () => {
+    pubSub.subscribe('display message', displayMessage);
     pubSub.subscribe('ship status', toggleShipPreview);
     pubSub.subscribe('display ship', displayShip);
     pubSub.subscribe('attack miss', displayMiss);
