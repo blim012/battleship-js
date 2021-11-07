@@ -63,7 +63,8 @@ const Game = (() => {
         pubSub.publish('attack hit', moveData);
         pubSub.publish('display message', {
           boardType: 'player',
-          text: 'You hit an enemy ship!'
+          text: 'You hit an enemy ship!',
+          color: '#ef233c'
         }); 
       }
       else {
@@ -72,7 +73,8 @@ const Game = (() => {
         pubSub.publish('attack sink', moveData);
         pubSub.publish('display message', {
           boardType: 'player',
-          text: 'You sunk an enemy ship!'
+          text: 'You sunk an enemy ship!',
+          color: '#ef233c'
         });
       }
     } else {
@@ -100,7 +102,8 @@ const Game = (() => {
         pubSub.publish('attack hit', moveData);
         pubSub.publish('display message', {
           boardType: 'enemy',
-          text: 'Enemy hit your ship!'
+          text: 'Enemy hit your ship!',
+          color: '#ef233c'
         });
       }
       else {
@@ -109,7 +112,8 @@ const Game = (() => {
         pubSub.publish('attack sink', moveData);
         pubSub.publish('display message', {
           boardType: 'enemy',
-          text: 'Enemy sunk your ship!'
+          text: 'Enemy sunk your ship!',
+          color: '#ef233c'
         });
       }
     } else {
@@ -125,7 +129,8 @@ const Game = (() => {
     let loser = winner === 'player' ? 'enemy' : 'player';
     pubSub.publish('display message', {
       boardType: winner,
-      text: 'Winner!'
+      text: 'Winner!',
+      color: '#ef233c'
     });
     pubSub.publish('display message', {
       boardType: loser,

@@ -85,7 +85,9 @@ const boardView = (() => {
   };
 
   const displayMessage = (messageData) => {
+    if(!messageData.hasOwnProperty('color')) messageData.color = '#ddd';
     let messageElement = document.querySelector(`#${messageData.boardType}-container .board-message`);
+    messageElement.style.color = messageData.color;
     messageElement.textContent = messageData.text;
   };
 
