@@ -114,11 +114,7 @@ const Game = (() => {
     pubSub.subscribe('reset', resetGame);
   };
 
-  const start = () => {
-    initSubscriptions();
-  };
-
-  return { start };
+  return { initSubscriptions };
 })();
 
 export default Game;

@@ -8,5 +8,5 @@ document.addEventListener('DOMContentLoaded', () => {
   boardView.initBoards();
   boardView.initBoardReset();
   boardView.initSubscriptions();
-  Game.start();
+  Game.initSubscriptions();
 });
