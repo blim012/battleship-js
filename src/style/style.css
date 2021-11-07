@@ -102,8 +102,19 @@ body {
   animation: tile-update 0.5s linear;
 }
 
-#rotate {
+#rotate-container {
+  display: flex;
+  justify-content: center;
   margin-top: 1em;
+}
+
+#rotate-container label {
+  font-size: 1.3em;
+  margin-left: 0.5em;
+}
+
+#rotate {
+  transform: scale(1.5);
 }
 
 #reset {
@@ -127,5 +138,5 @@ body {
 }
 
 .no-display {
-  display: none;
+  display: none !important;
 }
