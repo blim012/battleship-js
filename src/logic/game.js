@@ -4,10 +4,10 @@ import Bitboard from './bitboard.js';
 import pubSub from './pubSub';
 
 const Game = (() => {
-  const playerBoard = Gameboard();
-  const computerBoard = Gameboard();
   const player = Player();
   const computer = Player(false);
+  let playerBoard = Gameboard();
+  let computerBoard = Gameboard();
   let state = 'ship placement';
 
   const shipPlacementStatus = (tileEvent) => {
@@ -99,17 +99,24 @@ const Game = (() => {
     console.log(winner);
     state = 'gameover';
     pubSub.publish('gameover', winner);
-  }
+  };
+
+  const resetGame = () => {
+    playerBoard = Gameboard();
+    computerBoard = Gameboard();
+    state = 'ship placement';
+  };
 
   const initSubscriptions = () => {
     pubSub.subscribe('player tile click', placeShip);
     pubSub.subscribe('enemy tile click', makeMove);
     pubSub.subscribe('ship preview', shipPlacementStatus);
+    pubSub.subscribe('reset', resetGame);
   };
 
   const start = () => {
     initSubscriptions();
-  }
+  };
 
   return { start };
 })();

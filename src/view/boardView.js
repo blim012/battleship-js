@@ -24,12 +24,59 @@ const boardView = (() => {
     }
   };
 
+  const initBoardReset = () => {
+    let resetButton = document.querySelector('#reset');
+    resetButton.addEventListener('click', () => {
+      pubSub.publish('reset');
+    });
+  };
+
+  const resetBoards = () => {
+    let playerBoard = document.querySelector('#player-container .board');
+    let enemyBoard = document.querySelector('#enemy-container .board');
+    let playerTiles = Array.from(playerBoard.children);
+    let enemyTiles = Array.from(enemyBoard.children);
+
+    playerTiles.forEach((tileDiv) => tileDiv.classList.remove('hit', 'miss', 'sink', 'ship-tile'));
+    enemyTiles.forEach((tileDiv) => tileDiv.classList.remove('hit', 'miss', 'sink', 'ship-tile'));
+  };
+
   const toggleShipPreview = (tileEvent) => {
     let shipPreviewTileDivs = getShipPreviewTileDivs(tileEvent.element, tileEvent.status);
     if(tileEvent.type === 'mouseenter') {
       shipPreviewTileDivs.forEach((tileDiv) => tileDiv.classList.add('preview'));
     } else { // 'mouseleave'
       shipPreviewTileDivs.forEach((tileDiv) => tileDiv.classList.remove('preview'));
+    }
+  };
+
+  const displayShip = (tileNums) => {
+    let boardDiv = document.querySelector(`#player-container .board`);
+    for(let i = 0; i < tileNums.length; i++) {
+      let tileDiv = boardDiv.querySelector(`.tile:nth-child(${tileNums[i]})`);
+      tileDiv.classList.add('ship-tile');
+      tileDiv.classList.remove('preview');
+    }
+  };
+
+  const displayMiss = (moveData) => {
+    let boardDiv = document.querySelector(`#${moveData.boardType}-container .board`);
+    let tileDiv = boardDiv.querySelector(`.tile:nth-child(${moveData.tileNum})`);
+    tileDiv.classList.add('miss');
+  };
+
+  const displayHit = (moveData) => {
+    let boardDiv = document.querySelector(`#${moveData.boardType}-container .board`);
+    let tileDiv = boardDiv.querySelector(`.tile:nth-child(${moveData.tileNum})`);
+    tileDiv.classList.add('hit');
+  };
+
+  const displaySink = (moveData) => {
+    let shipTileNums = moveData.shipTileNums;
+    let boardDiv = document.querySelector(`#${moveData.boardType}-container .board`);
+    for(let i = 0; i < shipTileNums.length; i++) {
+      let tileDiv = boardDiv.querySelector(`.tile:nth-child(${shipTileNums[i]})`);
+      tileDiv.classList.add('sink');
     }
   };
 
@@ -59,45 +106,6 @@ const boardView = (() => {
 
   const getTileOffset = (vertical) => vertical ? 10 : 1;
 
-  const displayShip = (tileNums) => {
-    let boardDiv = document.querySelector(`#player-container .board`);
-    for(let i = 0; i < tileNums.length; i++) {
-      let tileDiv = boardDiv.querySelector(`.tile:nth-child(${tileNums[i]})`);
-      tileDiv.classList.add('ship-tile');
-      tileDiv.classList.remove('preview');
-    }
-    /*
-    let tileOffset = getTileOffset(shipData.vertical);
-    let boardDiv = document.querySelector(`#player-container .board`);
-    for(let i = 0; i < shipData.length; i++) {
-      let shipTile = shipData.tileNum + (tileOffset * i);
-      let tileDiv = boardDiv.querySelector(`.tile:nth-child(${shipTile})`);
-      tileDiv.classList.add('ship-tile');
-    }
-    */
-  };
-
-  const displayMiss = (moveData) => {
-    let boardDiv = document.querySelector(`#${moveData.boardType}-container .board`);
-    let tileDiv = boardDiv.querySelector(`.tile:nth-child(${moveData.tileNum})`);
-    tileDiv.classList.add('miss');
-  };
-
-  const displayHit = (moveData) => {
-    let boardDiv = document.querySelector(`#${moveData.boardType}-container .board`);
-    let tileDiv = boardDiv.querySelector(`.tile:nth-child(${moveData.tileNum})`);
-    tileDiv.classList.add('hit');
-  };
-
-  const displaySink = (moveData) => {
-    let shipTileNums = moveData.shipTileNums;
-    let boardDiv = document.querySelector(`#${moveData.boardType}-container .board`);
-    for(let i = 0; i < shipTileNums.length; i++) {
-      let tileDiv = boardDiv.querySelector(`.tile:nth-child(${shipTileNums[i]})`);
-      tileDiv.classList.add('sink');
-    }
-  };
-
   const isVertical = () => {
     let rotateCheckbox = document.querySelector('#rotate');
     return rotateCheckbox.checked ? false : true;
@@ -109,6 +117,7 @@ const boardView = (() => {
     pubSub.subscribe('attack miss', displayMiss);
     pubSub.subscribe('attack hit', displayHit);
     pubSub.subscribe('attack sink', displaySink);
+    pubSub.subscribe('reset', resetBoards);
   };
 
   function tileClickCB (boardType) {
@@ -135,7 +144,7 @@ const boardView = (() => {
     pubSub.publish('ship preview', { type, element });
   }
 
-  return { initBoards, initSubscriptions };
+  return { initBoards, initBoardReset, initSubscriptions };
 })();
 
 export default boardView;

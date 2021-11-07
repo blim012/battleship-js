@@ -4,7 +4,9 @@ import boardView from './view/boardView.js';
 import './style/reset.css';
 import './style/style.css';
 
-boardView.initBoards();
-boardView.initSubscriptions();
-
-Game.start();
+document.addEventListener('DOMContentLoaded', () => {
+  boardView.initBoards();
+  boardView.initBoardReset();
+  boardView.initSubscriptions();
+  Game.start();
+});
