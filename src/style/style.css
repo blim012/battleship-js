@@ -65,19 +65,30 @@ tile:nth-child(n + 91) {
   background-size: cover;
 }
 
+@keyframes tile-update {
+  0% { background-color: #ddd; opacity: 1; }
+  25% { background-color: #b4b7ba; opacity: 1; }
+  50% { background-color: #8b9197; opacity: 1; }
+  75% { background-color: #626c75; opacity: 1; }
+  100% { background-color: #394652; opacity: 1; }
+}
+
 .miss {
   background-image: url('../assets/wave.png');
   background-size: cover;
+  animation: tile-update 0.5s linear;
 }
 
 .hit {
   background-image: url('../assets/x.png');
   background-size: cover;
+  animation: tile-update 0.5s linear;
 }
 
 .sink {
   background-image: url('../assets/skull.png');
   background-size: cover;
+  animation: tile-update 0.5s linear;
 }
 
 #rotate {
