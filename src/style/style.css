@@ -48,3 +48,7 @@ body {
 .sink {
   background-color: yellow;
 }
+
+.no-display {
+  display: none;
+}

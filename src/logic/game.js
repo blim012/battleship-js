@@ -25,7 +25,7 @@ const Game = (() => {
         pubSub.publish('display ship', shipData.tileNums);
         if(playerBoard.getNumShips() === 5) { // All player ships are placed
           placeComputerShips();
-          // pubSub some function to display enemy board / hide rotate toggle
+          pubSub.publish('ships placed');
           state = 'play';
         }
       }

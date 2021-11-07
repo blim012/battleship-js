@@ -32,11 +32,15 @@ const boardView = (() => {
   };
 
   const resetBoards = () => {
+    let enemyContainer = document.querySelector('#enemy-container');
+    let rotateContainer = document.querySelector('#rotate-container');
     let playerBoard = document.querySelector('#player-container .board');
     let enemyBoard = document.querySelector('#enemy-container .board');
     let playerTiles = Array.from(playerBoard.children);
     let enemyTiles = Array.from(enemyBoard.children);
 
+    enemyContainer.classList.add('no-display');
+    rotateContainer.classList.remove('no-display');
     playerTiles.forEach((tileDiv) => tileDiv.classList.remove('hit', 'miss', 'sink', 'ship-tile'));
     enemyTiles.forEach((tileDiv) => tileDiv.classList.remove('hit', 'miss', 'sink', 'ship-tile'));
   };
@@ -80,6 +84,14 @@ const boardView = (() => {
     }
   };
 
+  const displayEnemy = () => {
+    let enemyContainer = document.querySelector('#enemy-container');
+    let rotateContainer = document.querySelector('#rotate-container');
+
+    enemyContainer.classList.remove('no-display');
+    rotateContainer.classList.add('no-display');
+  }
+
   const getTileNum = (tileDiv) => 
     Array.from(tileDiv.parentNode.children).indexOf(tileDiv) + 1;
 
@@ -117,6 +129,7 @@ const boardView = (() => {
     pubSub.subscribe('attack miss', displayMiss);
     pubSub.subscribe('attack hit', displayHit);
     pubSub.subscribe('attack sink', displaySink);
+    pubSub.subscribe('ships placed', displayEnemy);
     pubSub.subscribe('reset', resetBoards);
   };
 

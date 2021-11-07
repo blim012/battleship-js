@@ -11,11 +11,13 @@
         <div class="board-container">
           <div class="board"></div>
         </div>
-        <input type="checkbox" id="rotate" name="rotate">
-        <label for="rotate">Rotate</label> <br />
+        <div id='rotate-container'>
+          <input type="checkbox" id="rotate" name="rotate">
+          <label for="rotate">Rotate</label> <br />  
+        </div>
         <button id='reset'>Reset</button>
       </div>
-      <div id="enemy-container">
+      <div id="enemy-container" class='no-display'>
         <p class="board-title">Enemy Board</p>
         <div class="board-container">
           <div class="board"></div>
