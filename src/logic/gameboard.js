@@ -1,4 +1,5 @@
 const Ship = require('./ship');
+const Bitboard = require('./bitboard');
 
 const Gameboard = (defaultShips = []) => {
   let ships = defaultShips;
@@ -19,6 +20,33 @@ const Gameboard = (defaultShips = []) => {
       return shipsPlacement; 
     ships.push(Ship(placeBitBoard));
     return shipsPlacement | placeBitBoard;
+  };
+
+  const placePlayerShip = (shipData) => {
+    let shipLength = getLengthOfNextShip();
+    shipData.tileNums.splice(shipLength);
+    if(shipData.tileNums.length === shipLength) {
+      let placeBitBoard = shipData.tileNums.reduce((prev, curr) => {
+        return prev | Bitboard.tileNumToBitBoard(curr);
+      }, 0n);
+      let placeResult = placeShip(placeBitBoard);
+      return (Boolean)((placeResult & placeBitBoard) === placeBitBoard);
+    }
+  };
+
+  const placeComputerShips = () => {
+    while(getNumShips() < 5) {
+      let shipTileNums = [];
+      let shipLength = getLengthOfNextShip();
+      let vertical = Math.floor(Math.random() * 2);
+      let tileOffset = vertical ? 10 : 1;
+      let randTileNum = getRandTileNum(shipLength, vertical);
+      for(let i = 0; i < shipLength; i++) 
+        shipTileNums.push(randTileNum + (tileOffset * i));
+      let placeBitBoard = shipTileNums.reduce((prev, curr) => {
+        return prev | Bitboard.tileNumToBitBoard(curr) }, 0n);
+      placeShip(placeBitBoard);
+    }
   };
 
   const receiveAttack = (attackBitBoard) => {
@@ -44,13 +72,20 @@ const Gameboard = (defaultShips = []) => {
     return true;
   };
 
+  const getRandTileNum  = (shipLength, vertical) => {
+    if(vertical) return Math.floor(Math.random() * (110 - (shipLength * 10))) + 1;
+    let randTileNumOnes = Math.floor(Math.random() * (10 - (shipLength - 1))) + 1;
+    let randTileNumTens = Math.floor(Math.random() * 10) * 10;
+    return randTileNumOnes + randTileNumTens;
+  };
+
   const getShipsPlacement = () => {
     if(ships.length === 0) return 0n;
     return ships.reduce((shipsPlacement, ship) => { 
       return shipsPlacement | ship.getPositionBitBoard() }, 0n);
   };
 
-  return { getNumShips, getLengthOfNextShip, getMissedBitBoard, placeShip, receiveAttack, isAllSunk };
+  return { getNumShips, getLengthOfNextShip, getMissedBitBoard, placePlayerShip, placeComputerShips, placeShip, receiveAttack, isAllSunk };
 };
 
 module.exports = Gameboard;
