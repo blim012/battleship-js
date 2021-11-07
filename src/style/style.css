@@ -10,8 +10,16 @@ body {
   height: 100vh;
 }
 
-#player-container {
+.relative-pos {
   position: relative;
+}
+
+.board-title {
+  position: absolute;
+  top: -2em;
+  left: 50%;
+  transform: translate(-50%, 0);
+  font-size: 2em;
 }
 
 .board-container {
