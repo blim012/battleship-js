@@ -26,10 +26,12 @@ body {
 
 .board-title {
   font-size: 3em;
+  font-weight: 500;
 }
 
 .board-message {
   font-size: 1.5em;
+  font-weight: 300;
   margin-top: 0.5em;
 }
 
