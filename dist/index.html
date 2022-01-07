@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Battleship</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet"> 
+  <script defer src="bundle.js"></script></head>
+  <body>
+    <div id="boards">
+      <div id="player-container" class="relative-pos flex-col">
+        <header class="board-header">
+          <p class="board-title">Player Board</p>
+          <div class="board-message-container">
+            <p class="board-message">Place your ships!</p>
+          </div>
+        </header>
+        <div class="board-container">
+          <div class="board"></div>
+        </div>
+        <div id='rotate-container'>
+          <input type="checkbox" id="rotate" name="rotate">
+          <label for="rotate">Rotate</label> <br />  
+        </div>
+        <button id='reset'>Reset</button>
+      </div>
+      <div id="enemy-container" class='flex-col no-display'>
+        <header class="board-header">
+          <p class="board-title">Enemy Board</p>
+          <div class="board-message-container">
+            <p class="board-message"></p>
+          </div>
+        </header>
+        <div class="board-container">
+          <div class="board"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
